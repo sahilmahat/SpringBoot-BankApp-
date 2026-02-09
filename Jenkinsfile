@@ -9,10 +9,6 @@ pipeline {
     SONAR_PROJECT  = "bankapp"
   }
 
-  tools {
-    maven 'maven'
-    jdk 'jdk17'
-  }
 
   stages {
 
