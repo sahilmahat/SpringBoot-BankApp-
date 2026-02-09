@@ -8,6 +8,7 @@ public class HealthController {
 
     @GetMapping("/health")
     public String health() {
-        return "BankApp is running";
+        return "BankApp is running on EKS";
     }
 }
+

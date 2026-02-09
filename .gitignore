@@ -1,5 +1,37 @@
+# --------------------
+# Java / Maven
+# --------------------
 target/
 *.log
+.mvn/wrapper/maven-wrapper.jar
+
+# --------------------
+# Frontend (future-proof)
+# --------------------
+node_modules/
+
+# --------------------
+# Environment & secrets
+# --------------------
+.env
+*.env
+
+# --------------------
+# AWS / Kubernetes (LOCAL ONLY)
+# --------------------
+aws/
+.kube/
+kubeconfig
+
+# --------------------
+# IDE / Editor
+# --------------------
 .idea/
 .vscode/
+*.iml
 
+# --------------------
+# OS
+# --------------------
+.DS_Store
+awscliv2.zip

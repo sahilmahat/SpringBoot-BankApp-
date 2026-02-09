@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankapp-frontend
+  namespace: bankapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankapp-frontend
+  template:
+    metadata:
+      labels:
+        app: bankapp-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: sahilmahat/bankapp-frontend:latest
+          ports:
+            - containerPort: 80
+

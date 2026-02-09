@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: bank-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bankdb
+      MYSQL_USER: bankuser
+      MYSQL_PASSWORD: bankpass
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  backend:
+    image: sahilmahat/bankapp:latest
+    container_name: bankapp-backend
+    expose:
+      - "8080"
+    depends_on:
+      - mysql
+
+  frontend:
+    build: ./frontend
+    container_name: bankapp-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:
+
