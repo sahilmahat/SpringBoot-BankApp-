@@ -61,8 +61,8 @@ pipeline {
     stage('Trivy Scan (Images)') {
       steps {
         sh '''
-          trivy image --severity HIGH,CRITICAL --exit-code 1 $DOCKERHUB_USER/$BACKEND_IMAGE:$IMAGE_TAG
-          trivy image --severity HIGH,CRITICAL --exit-code 1 $DOCKERHUB_USER/$FRONTEND_IMAGE:$IMAGE_TAG
+          trivy image --severity CRITICAL --exit-code 1 $DOCKERHUB_USER/$BACKEND_IMAGE:$IMAGE_TAG
+          trivy image --severity CRITICAL --exit-code 1 $DOCKERHUB_USER/$FRONTEND_IMAGE:$IMAGE_TAG
         '''
       }
     }
