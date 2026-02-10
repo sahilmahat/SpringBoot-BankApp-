@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: sahilmahat/bankapp-frontend:26
+          image: sahilmahat/bankapp-frontend:28
           ports:
             - containerPort: 80
 

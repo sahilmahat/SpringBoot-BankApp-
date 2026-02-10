@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: bankapp
-          image: sahilmahat/bankapp-backend:26
+          image: sahilmahat/bankapp-backend:28
           ports:
             - containerPort: 8080
 
