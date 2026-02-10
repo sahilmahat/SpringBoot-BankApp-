@@ -1,15 +1,15 @@
-# Use lightweight Java 17 image
 FROM eclipse-temurin:17-jre-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy jar file
-COPY target/bankapp-0.0.1-SNAPSHOT.jar app.jar
+COPY target/*.jar app.jar
 
-# Expose application port
+ENV JAVA_OPTS="\
+--add-opens=java.base/java.io=ALL-UNNAMED \
+--add-opens=java.base/java.lang=ALL-UNNAMED \
+--add-opens=java.base/java.util=ALL-UNNAMED \
+"
+
 EXPOSE 8080
 
-# Run application
-ENTRYPOINT ["java", "-jar", "app.jar"]
-
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar app.jar"]
