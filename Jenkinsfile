@@ -2,12 +2,14 @@ pipeline {
   agent any
 
   environment {
-    GIT_REPO        = "https://github.com/sahilmahat/SpringBoot-BankApp-.git"
-    DOCKERHUB_USER  = "sahilmahat"
-    BACKEND_IMAGE   = "bankapp-backend"
-    FRONTEND_IMAGE  = "bankapp-frontend"
-    IMAGE_TAG       = "${BUILD_NUMBER}"
-    SONAR_PROJECT   = "bankapp"
+    GIT_REPO       = "https://github.com/sahilmahat/SpringBoot-BankApp-.git"
+    DOCKERHUB_USER = "sahilmahat"
+
+    BACKEND_IMAGE  = "bankapp-backend"
+    FRONTEND_IMAGE = "bankapp-frontend"
+
+    IMAGE_TAG      = "${BUILD_NUMBER}"
+    SONAR_PROJECT  = "bankapp"
   }
 
   stages {
@@ -28,13 +30,15 @@ pipeline {
 
     stage('SonarQube Analysis') {
       steps {
-        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-          sh '''
-            mvn sonar:sonar \
-              -Dsonar.projectKey=${SONAR_PROJECT} \
-              -Dsonar.projectName=${SONAR_PROJECT} \
-              -Dsonar.token=$SONAR_TOKEN
-          '''
+        withSonarQubeEnv('sonarqube') {
+          withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            sh '''
+              mvn sonar:sonar \
+                -Dsonar.projectKey=${SONAR_PROJECT} \
+                -Dsonar.projectName=${SONAR_PROJECT} \
+                -Dsonar.token=$SONAR_TOKEN
+            '''
+          }
         }
       }
     }
@@ -51,7 +55,7 @@ pipeline {
       steps {
         sh '''
           docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE:$IMAGE_TAG .
-          docker build -t $DOCKERHUB_USER/$FRONTEND_IMAGE:$IMAGE_TAG ./frontend
+          docker build -t $DOCKERHUB_USER/$FRONTEND_IMAGE:$IMAGE_TAG frontend/
         '''
       }
     }
@@ -73,7 +77,7 @@ pipeline {
           passwordVariable: 'DOCKER_PASS'
         )]) {
           sh '''
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
             docker push $DOCKERHUB_USER/$BACKEND_IMAGE:$IMAGE_TAG
             docker push $DOCKERHUB_USER/$FRONTEND_IMAGE:$IMAGE_TAG
           '''
@@ -90,7 +94,7 @@ pipeline {
       }
     }
 
-    stage('Commit & Push (GitOps)') {
+    stage('Commit & Push (GitOps Trigger)') {
       steps {
         withCredentials([usernamePassword(
           credentialsId: 'github-creds',
@@ -111,10 +115,10 @@ pipeline {
 
   post {
     success {
-      echo "✅ CI successful. ArgoCD will deploy to EKS automatically."
+      echo "✅ CI passed. Argo CD will deploy to EKS automatically."
     }
     failure {
-      echo "❌ Pipeline failed. Deployment blocked."
+      echo "❌ CI failed. Deployment blocked."
     }
   }
 }
