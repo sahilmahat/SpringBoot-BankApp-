@@ -1,32 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bank App</title>
+  <title>BankApp | Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>🏦 Bank Application</h2>
+<div class="card">
+  <h2>Login</h2>
 
-<div class="box">
-  <h3>Register</h3>
-  <input id="regUser" placeholder="Username">
-  <input id="regPass" placeholder="Password" type="password">
-  <input id="regBal" placeholder="Balance" type="number">
-  <button onclick="register()">Register</button>
-</div>
-
-<div class="box">
-  <h3>Login</h3>
   <input id="logUser" placeholder="Username">
-  <input id="logPass" placeholder="Password" type="password">
-  <button onclick="login()">Login</button>
-</div>
+  <input id="logPass" type="password" placeholder="Password">
 
-<div class="box">
-  <h3>Balance</h3>
-  <button onclick="getBalance()">Get Balance</button>
-  <p id="balance"></p>
+  <button onclick="login()">Login</button>
+
+  <p>
+    New user?
+    <a href="register.html">Register here</a>
+  </p>
+
+  <p class="msg" id="loginMsg"></p>
 </div>
 
 <script src="app.js"></script>

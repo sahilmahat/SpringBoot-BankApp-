@@ -15,7 +15,11 @@ spec:
     spec:
       containers:
         - name: frontend
+<<<<<<< HEAD
           image: sahilmahat/bankapp-frontend:14
+=======
+          image: sahilmahat/bankapp-frontend:latest
+>>>>>>> 496f6ea (added changes in k8s and frontend)
           ports:
             - containerPort: 80
 

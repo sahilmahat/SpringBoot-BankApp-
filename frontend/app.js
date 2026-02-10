@@ -1,72 +1,64 @@
-const BASE_URL = "/api";
+const API = "/api";
 
-let currentUser = "";
-
-/* ---------------- REGISTER ---------------- */
-function register() {
-  if (!regUser.value || !regPass.value || !regBal.value) {
-    alert("Please fill all registration fields");
-    return;
-  }
-
-  fetch(`${BASE_URL}/auth/register`, {
+/* ---------- LOGIN ---------- */
+function login() {
+  fetch(`${API}/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      username: logUser.value,
+      password: logPass.value
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Invalid credentials");
+    return res.text();
+  })
+  .then(() => {
+    localStorage.setItem("user", logUser.value);
+    window.location = "dashboard.html";
+  })
+  .catch(err => loginMsg.innerText = err.message);
+}
+
+/* ---------- REGISTER ---------- */
+function register() {
+  fetch(`${API}/auth/register`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       username: regUser.value,
       password: regPass.value,
       balance: regBal.value
     })
   })
-    .then(res => {
-      if (!res.ok) throw new Error("Registration failed");
-      return res.text();
-    })
-    .then(msg => alert(msg))
-    .catch(err => alert(err.message));
-}
-
-/* ---------------- LOGIN ---------------- */
-function login() {
-  if (!logUser.value || !logPass.value) {
-    alert("Please enter username and password");
-    return;
-  }
-
-  fetch(`${BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: logUser.value,
-      password: logPass.value
-    })
+  .then(res => {
+    if (!res.ok) throw new Error("Registration failed");
+    return res.text();
   })
-    .then(res => {
-      if (!res.ok) throw new Error("Invalid credentials");
-      return res.text();
-    })
-    .then(msg => {
-      alert(msg);
-      currentUser = logUser.value;
-    })
-    .catch(err => alert(err.message));
+  .then(msg => registerMsg.innerText = msg)
+  .catch(err => registerMsg.innerText = err.message);
 }
 
-/* ---------------- BALANCE ---------------- */
+/* ---------- DASHBOARD ---------- */
 function getBalance() {
-  if (!currentUser) {
-    alert("Please login first");
-    return;
-  }
+  const user = localStorage.getItem("user");
+  fetch(`${API}/account/balance/${user}`)
+    .then(res => res.text())
+    .then(bal => balance.innerText = "Balance: ₹" + bal)
+    .catch(() => dashMsg.innerText = "Unable to fetch balance");
+}
 
-  fetch(`${BASE_URL}/account/balance/${currentUser}`)
-    .then(res => {
-      if (!res.ok) throw new Error("Unable to fetch balance");
-      return res.text();
-    })
-    .then(bal => {
-      balance.innerText = "Balance: " + bal;
-    })
-    .catch(err => alert(err.message));
+function logout() {
+  localStorage.clear();
+  window.location = "index.html";
+}
+
+/* Auto load dashboard */
+if (location.pathname.includes("dashboard")) {
+  const user = localStorage.getItem("user");
+  if (!user) location = "index.html";
+  welcome.innerText = "Welcome, " + user;
+  getBalance();
 }
 

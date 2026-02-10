@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: bankapp
-          image: sahilmahat/bankapp:latest
+          image: sahilmahat/bankapp-backend:latest
           ports:
             - containerPort: 8080
 
@@ -29,14 +29,14 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /health
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 15
             periodSeconds: 5
 
           livenessProbe:
             httpGet:
-              path: /health
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
