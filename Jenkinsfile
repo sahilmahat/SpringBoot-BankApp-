@@ -28,15 +28,13 @@ pipeline {
 
     stage('SonarQube Analysis') {
       steps {
-        withSonarQubeEnv('sonarqube') {
-          withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-            sh '''
-              mvn sonar:sonar \
-                -Dsonar.projectKey=${SONAR_PROJECT} \
-                -Dsonar.projectName=${SONAR_PROJECT} \
-                -Dsonar.login=${SONAR_TOKEN}
-            '''
-          }
+        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+          sh '''
+            mvn sonar:sonar \
+              -Dsonar.projectKey=${SONAR_PROJECT} \
+              -Dsonar.projectName=${SONAR_PROJECT} \
+              -Dsonar.token=$SONAR_TOKEN
+          '''
         }
       }
     }
